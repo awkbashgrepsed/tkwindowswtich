@@ -14,7 +14,6 @@ A lightweight multi-monitor window switcher for Windows, built with Python and T
 
 ## Requirements
 
-- Windows 10 or Windows 11
 - Python 3 with Tkinter installed
 
 ## Run
