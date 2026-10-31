@@ -323,9 +323,18 @@ class WindowSwitcher:
 
     def refresh(self):
         selected_handle = None
+        selected_window_handle = None
         current_tab = self.notebook.select() if hasattr(self, "notebook") else None
         if current_tab:
             selected_handle = self.tab_monitor.get(current_tab)
+            old_listing = self.listboxes.get(selected_handle)
+            if old_listing and old_listing.curselection():
+                old_candidates = [
+                    w for w in self.windows if w.monitor_handle == selected_handle
+                ]
+                old_index = old_listing.curselection()[0]
+                if old_index < len(old_candidates):
+                    selected_window_handle = old_candidates[old_index].handle
 
         self.monitors = get_monitors()
         self.windows = get_windows(self.monitors, self.own_pid)
@@ -359,6 +368,12 @@ class WindowSwitcher:
             ]
             for window in monitor_windows:
                 listing.insert("end", window.title)
+            if monitor.handle == selected_handle and selected_window_handle:
+                for row, window in enumerate(monitor_windows):
+                    if window.handle == selected_window_handle:
+                        listing.selection_set(row)
+                        listing.activate(row)
+                        break
             if not monitor_windows:
                 listing.insert("end", "(No open windows)")
                 listing.itemconfigure(0, foreground="gray")
