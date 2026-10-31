@@ -51,6 +51,46 @@ class MONITORINFO(ctypes.Structure):
     ]
 
 
+# Declare Win32 signatures explicitly so HWND/HMONITOR handles are not
+# truncated on 64-bit Windows.
+user32.GetMonitorInfoW.argtypes = [wintypes.HMONITOR, ctypes.POINTER(MONITORINFO)]
+user32.GetMonitorInfoW.restype = wintypes.BOOL
+user32.EnumDisplayMonitors.argtypes = [
+    wintypes.HDC, ctypes.POINTER(RECT), ctypes.c_void_p, wintypes.LPARAM
+]
+user32.EnumDisplayMonitors.restype = wintypes.BOOL
+user32.MonitorFromWindow.argtypes = [wintypes.HWND, wintypes.DWORD]
+user32.MonitorFromWindow.restype = wintypes.HMONITOR
+user32.MonitorFromPoint.argtypes = [POINT, wintypes.DWORD]
+user32.MonitorFromPoint.restype = wintypes.HMONITOR
+user32.GetCursorPos.argtypes = [ctypes.POINTER(POINT)]
+user32.GetCursorPos.restype = wintypes.BOOL
+user32.GetForegroundWindow.restype = wintypes.HWND
+user32.IsWindowVisible.argtypes = [wintypes.HWND]
+user32.IsWindowVisible.restype = wintypes.BOOL
+user32.GetWindowTextLengthW.argtypes = [wintypes.HWND]
+user32.GetWindowTextLengthW.restype = ctypes.c_int
+user32.GetWindowTextW.argtypes = [wintypes.HWND, wintypes.LPWSTR, ctypes.c_int]
+user32.GetWindowTextW.restype = ctypes.c_int
+user32.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+user32.GetWindowThreadProcessId.restype = wintypes.DWORD
+user32.GetWindowRect.argtypes = [wintypes.HWND, ctypes.POINTER(RECT)]
+user32.GetWindowRect.restype = wintypes.BOOL
+user32.EnumWindows.restype = wintypes.BOOL
+user32.ShowWindow.argtypes = [wintypes.HWND, ctypes.c_int]
+user32.BringWindowToTop.argtypes = [wintypes.HWND]
+user32.SetForegroundWindow.argtypes = [wintypes.HWND]
+user32.SetWindowPos.argtypes = [
+    wintypes.HWND, wintypes.HWND, ctypes.c_int, ctypes.c_int,
+    ctypes.c_int, ctypes.c_int, wintypes.UINT
+]
+user32.SetWindowPos.restype = wintypes.BOOL
+dwmapi.DwmGetWindowAttribute.argtypes = [
+    wintypes.HWND, wintypes.DWORD, ctypes.c_void_p, wintypes.DWORD
+]
+dwmapi.DwmGetWindowAttribute.restype = ctypes.c_long
+
+
 @dataclass
 class Monitor:
     handle: int
